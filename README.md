@@ -32,9 +32,10 @@ s3_android(
   region: ENV['S3_REGION'],                       # Required from user.
 
   apk: 'AppName.apk',                             # Required
-  
+
   path: '/path/to/apk',                           # target path on S3
   html_template_path: '/path/to/template',        # path to HTML template
+  html_file_name: '/path/to/template/on/s3'       # path to HTML on S3
 )
 ```
 
