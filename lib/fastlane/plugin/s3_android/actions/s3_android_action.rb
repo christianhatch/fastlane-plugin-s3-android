@@ -47,7 +47,7 @@ module Fastlane
 
         html_template_path = params[:html_template_path]
 
-        apk_version = self.get_version_from_apk(apk)
+        # apk_version = self.get_version_from_apk(apk)
 
         s3_client = self.s3_client(s3_access_key, s3_secret_access_key, s3_region)
         bucket = s3_client.buckets[s3_bucket]
@@ -62,27 +62,27 @@ module Fastlane
         Actions.lane_context[SharedValues::S3_APK_OUTPUT_PATH] = apk_url
         ENV[SharedValues::S3_APK_OUTPUT_PATH.to_s] = apk_url
 
-        html_file_name = "#{s3_path}index.html"
+        # html_file_name = "#{s3_path}index.html"
 
-        # grabs module
-        eth = Fastlane::ErbTemplateHelper
+        # # grabs module
+        # eth = Fastlane::ErbTemplateHelper
 
-        # Creates html from template
-        if html_template_path && File.exist?(html_template_path)
-          html_template = eth.load_from_path(html_template_path)
-        else
-          html_template = eth.load("s3_html_template")
-        end
+        # # Creates html from template
+        # if html_template_path && File.exist?(html_template_path)
+        #   html_template = eth.load_from_path(html_template_path)
+        # else
+        #   html_template = eth.load("s3_html_template")
+        # end
 
-        html_render = eth.render(html_template, {
-          apk_url: apk_url,
-          apk_version: apk_version,
-        })
+        # html_render = eth.render(html_template, {
+        #   apk_url: apk_url,
+        #   apk_version: apk_version,
+        # })
 
-        html_url = self.upload_file(bucket, html_file_name, html_render, acl)
+        # html_url = self.upload_file(bucket, html_file_name, html_render, acl)
 
-        Actions.lane_context[SharedValues::S3_HTML_OUTPUT_PATH] = html_url
-        ENV[SharedValues::S3_HTML_OUTPUT_PATH.to_s] = html_url
+        # Actions.lane_context[SharedValues::S3_HTML_OUTPUT_PATH] = html_url
+        # ENV[SharedValues::S3_HTML_OUTPUT_PATH.to_s] = html_url
 
         UI.success("Successfully uploaded apk file to '#{Actions.lane_context[SharedValues::S3_APK_OUTPUT_PATH]}'")
 
@@ -173,19 +173,19 @@ module Fastlane
       #
       # get version name from APK
       #
-      def self.get_version_from_apk(path_to_apk)
-        UI.user_error!("You must define your ANDROID_HOME") unless ENV['ANDROID_HOME'] != nil
+      # def self.get_version_from_apk(path_to_apk)
+      #   UI.user_error!("You must define your ANDROID_HOME") unless ENV['ANDROID_HOME'] != nil
 
-        # search for most recent aapt
-        aaptBinary = %x( find $ANDROID_HOME/build-tools -name "aapt" | tail -1 | tr -s \"\\n\" \" \" )
-        # extract versionName='X.Y.Z' from APK
-        getVersionCmd = aaptBinary+ "dump badging " + path_to_apk + " | tr -s \" \" \"\\n\" | grep \"versionName\"\n"
-        # execute the command line
-        getVersion = `#{getVersionCmd}`
+      #   # search for most recent aapt
+      #   aaptBinary = %x( find $ANDROID_HOME/build-tools -name "aapt" | tail -1 | tr -s \"\\n\" \" \" )
+      #   # extract versionName='X.Y.Z' from APK
+      #   getVersionCmd = aaptBinary+ "dump badging " + path_to_apk + " | tr -s \" \" \"\\n\" | grep \"versionName\"\n"
+      #   # execute the command line
+      #   getVersion = `#{getVersionCmd}`
 
-        #return only the X.Y.Z
-        return getVersion.scan(/versionName='(.*)'/).first.join
-      end
+      #   #return only the X.Y.Z
+      #   return getVersion.scan(/versionName='(.*)'/).first.join
+      # end
 
       def self.description
         "A simple plugin to upload APK to Amazon S3"
